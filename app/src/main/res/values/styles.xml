@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Title1" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">28dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_semibold</item>
+    </style>
+
+    <style name="Title2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_semibold</item>
+    </style>
+
+    <style name="Title3" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_semibold</item>
+    </style>
+
+    <style name="SubTitle1" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_regular</item>
+    </style>
+
+    <style name="SUbTitle2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_regular</item>
+    </style>
+
+    <style name="Button1" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_semibold</item>
+    </style>
+
+    <style name="Button2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_semibold</item>
+    </style>
+
+    <style name="Body1" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_semibold</item>
+    </style>
+
+    <style name="Body2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_light</item>
+    </style>
+
+    <style name="Body3" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/suit_light</item>
+    </style>
+</resources>
