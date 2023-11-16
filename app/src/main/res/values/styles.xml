@@ -25,7 +25,7 @@
         <item name="android:fontFamily">@font/suit_regular</item>
     </style>
 
-    <style name="SUbTitle2" parent="Widget.AppCompat.TextView">
+    <style name="SubTitle2" parent="Widget.AppCompat.TextView">
         <item name="android:textSize">16dp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/suit_regular</item>
