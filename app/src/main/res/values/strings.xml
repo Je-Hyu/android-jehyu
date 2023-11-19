@@ -2,7 +2,7 @@
     <string name="app_name">JeHyuHaSSU</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string-array name="dropdown_menu">
+    <string-array name="college_dropdown_menu">
         <item>경영대학</item>
         <item>경제통상대학</item>
         <item>공과대학</item>
@@ -12,5 +12,17 @@
         <item>자연과학대학</item>
         <item>IT대학</item>
         <item>융합특성화자유전공학부</item>
+    </string-array>
+    <string-array name="people_num_dropdown_menu">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 </resources>

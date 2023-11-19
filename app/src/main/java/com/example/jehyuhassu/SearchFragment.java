@@ -1,15 +1,22 @@
 package com.example.jehyuhassu;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jehyuhassu.databinding.FragmentSearchBinding;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,11 +72,59 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        String[] regionArray = getResources().getStringArray(R.array.dropdown_menu);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, regionArray);
-        binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
-        // Inflate the layout for this fragment
+        //단과대 종류 드롭다운 구현
+        String[] regionArray = getResources().getStringArray(R.array.college_dropdown_menu);
+        ArrayAdapter<String> arrayAdapter_college = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, regionArray);
+        binding.autoCompleteTextViewCollege.setAdapter(arrayAdapter_college);
+
+        //인원수 드롭다운 구현
+        String[] peopleNumArray = getResources().getStringArray(R.array.people_num_dropdown_menu);
+        ArrayAdapter<String> arrayAdapter_people_num = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, peopleNumArray);
+        binding.autoCompleteTextViewPeopleNum.setAdapter(arrayAdapter_people_num);
+
+        binding.searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String collegeItem = binding.autoCompleteTextViewCollege.getText().toString().trim();
+                String participantsItem = binding.autoCompleteTextViewPeopleNum.getText().toString().trim();
+                String selectedItem = ("{\"college\":\""+ collegeItem + "\", \"participants\":\""+participantsItem+"\"}");
+                showToast(selectedItem);
+            }
+        });
+/*
+        binding.addSearchCardView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 카드뷰를 동적으로 생성하고 설정합니다.
+                CardView cardView = createCardView();
+
+                // 생성한 카드뷰를 레이아웃에 추가합니다.
+                binding.searchLayout.addView(cardView);
+            }
+        });*/
         return view;
+    }
+/*
+    private CardView createCardView() {
+        // 새로운 카드뷰 생성
+        CardView cardView = new CardView(getActivity());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 0, 0, 16); // 마진 설정
+        cardView.setLayoutParams(layoutParams);
+
+        // 카드뷰에 내용을 추가 (예시로 TextView를 추가)
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View cardContent = inflater.inflate(R.layout.search_cardview_content, null);
+        cardView.addView(cardContent);
+
+        return cardView;
+    }
+    */
+    public void showToast(String message) {
+        Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
