@@ -6,4 +6,8 @@
     <color name="secondary">#FA9884</color>
     <color name="tertiary">#FFE5CA</color>
     <color name="background">#FFF3E2</color>
+    <color name="gray_100">#EBF5F4</color>
+    <color name="gray_200">#D9EAE8</color>
+    <color name="gray_300">#B3C9C6</color>
+    <color name="gray_400">#899896</color>
 </resources>
