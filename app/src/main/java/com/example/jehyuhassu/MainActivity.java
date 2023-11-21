@@ -33,13 +33,16 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.home_menu_item) {
                     replaceFragment(new HomeFragment());
+                    return true;
                 } else if (itemId == R.id.search_menu_item) {
                     replaceFragment(new SearchFragment());
+                    return true;
                 } else if (itemId == R.id.profile_menu_item) {
                     replaceFragment(new ProfileFragment());
+                    return true;
                 }
 
-                return true;
+                return false;
             }
         });
     }

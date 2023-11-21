@@ -64,6 +64,14 @@ public class HomeFragment extends Fragment {
             super(binding.getRoot());
             this.binding = binding;
         }
+
+        private void bind(CardListItem item) {
+            binding.cardImageView.setImageResource(item.getImage());
+            binding.cardTitleTextView.setText(item.getName());
+            binding.cardTimeTextView.setText(item.getTime());
+            binding.cardCollegeChipView.setText(item.getTags()[0]);
+        }
+
     }
 
     private class HomeListAdapter extends RecyclerView.Adapter<HomeCardViewHolder> {
@@ -92,10 +100,7 @@ public class HomeFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull HomeCardViewHolder holder, int position) {
             CardListItem item = items.get(position);
-            holder.binding.cardImageView.setImageResource(item.getImage());
-            holder.binding.cardTitleTextView.setText(item.getName());
-            holder.binding.cardTimeTextView.setText(item.getTime());
-            holder.binding.cardCollegeChipView.setText(item.getTags()[0]);
+            holder.bind(item);
         }
 
         @Override

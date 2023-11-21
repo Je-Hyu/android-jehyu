@@ -68,6 +68,16 @@ public class ProfileFragment extends Fragment {
             super(binding.getRoot());
             this.binding = binding;
         }
+
+        private void bind(ProfileListItem item, int position) {
+            binding.titleTextView.setText(item.getTitle());
+            binding.contentTextView.setText(item.getContent());
+
+            // Show an arrow if the item is a department or parent department
+            if (position == 2 || position == 3) {
+                binding.arrowImageView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private class ProfileListAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
@@ -96,12 +106,7 @@ public class ProfileFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
             ProfileListItem item = items.get(position);
-            holder.binding.titleTextView.setText(item.getTitle());
-            holder.binding.contentTextView.setText(item.getContent());
-
-            if (position == 2 || position == 3) {
-                holder.binding.arrowImageView.setVisibility(View.VISIBLE);
-            }
+            holder.bind(item, position);
         }
 
         @Override
