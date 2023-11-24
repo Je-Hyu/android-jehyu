@@ -1,5 +1,6 @@
 package com.example.jehyuhassu;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -91,6 +92,9 @@ public class HomeFragment extends Fragment {
                     int position = binding.homeRecyclerView.getChildAdapterPosition(v);
                     CardListItem item = items.get(position);
                     Log.d("HomeFragment", "item clicked: " + item.getName());
+                    // start JehyuDetailActivity
+                    Intent intent = new Intent(getActivity(), JehyuDetailActivity.class);
+                    startActivity(intent);
                 }
             });
 
