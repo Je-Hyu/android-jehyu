@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item, getResources().getStringArray(R.array.dropdown_menu));
+        adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item, getResources().getStringArray(R.array.college_dropdown_menu));
         binding.collegeAutoCompleteTextView.setAdapter(adapter);
 
         binding.collegeAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

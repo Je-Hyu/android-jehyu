@@ -1,109 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".SearchFragment">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="검색 화면"
+            android:textSize="20dp"
+            android:layout_margin="15dp"/>
 
         <LinearLayout
-            android:id="@+id/search_layout"
+            android:id="@+id/layout_list_search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="8dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/search_cardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/secondary">
-
-                <LinearLayout
-                    android:id="@+id/search_cardView_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/dropdown_button_college"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="230dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginBottom="8dp"
-                        app:boxBackgroundColor="@color/tertiary"
-                        app:boxStrokeColor="#E74646"
-                        app:boxStrokeWidth="2dp"
-                        android:layout_marginLeft="8dp">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteTextView_college"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:fontFamily="@font/suit_medium"
-                            android:text="단과대" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/dropdown_button_people_num"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginBottom="8dp"
-                        app:boxBackgroundColor="@color/tertiary"
-                        app:boxStrokeColor="#E74646"
-                        app:boxStrokeWidth="2dp"
-                        android:layout_marginLeft="8dp">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteTextView_people_num"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:fontFamily="@font/suit_medium"
-                            android:text="인원" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp">
-
-                            <ImageButton
-                            android:id="@+id/add_search_cardView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/button_design"
-                            android:contentDescription="." />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/add_person"
-                            android:adjustViewBounds="true"
-                            android:scaleType="centerInside"/>
-
-                    </FrameLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-    <Button
-        android:id="@+id/search_button"
+        <android.widget.Button
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="add"
+            android:background="@drawable/button_design"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:textAllCaps="false"
+            android:drawableRight="@drawable/add_person"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+        </android.widget.Button>
+    </LinearLayout>
+    <android.widget.Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="검색"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="검색하기"
+        android:textSize="20dp"
+        android:fontFamily="@font/suit_bold"
+        android:background="@drawable/button_design"></android.widget.Button>
+</FrameLayout>
