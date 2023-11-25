@@ -4,60 +4,32 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.jehyuhassu.databinding.FragmentSearchBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment {
+import java.util.HashMap;
+import java.util.Map;
+
+public class SearchFragment extends Fragment implements View.OnClickListener {
 
     private FragmentSearchBinding binding;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public SearchFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -65,11 +37,109 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        String[] regionArray = getResources().getStringArray(R.array.dropdown_menu);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, regionArray);
-        binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
-        // Inflate the layout for this fragment
+        binding.addButton.setOnClickListener(this);
+
         return view;
+    }
+
+    public void onClick(View v) {
+        addView();
+    }
+
+    private void addView() {
+        final View searchView = getLayoutInflater().inflate(R.layout.row_add_search_menu, null, false);
+        ImageButton removeButton = searchView.findViewById(R.id.remove_button);
+
+        String[] regionArray = getResources().getStringArray(R.array.college_dropdown_menu);
+        ArrayAdapter<String> arrayAdapter_college = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, regionArray);
+        AutoCompleteTextView autoCompleteTextViewCollege = searchView.findViewById(R.id.autoCompleteTextView_college);
+        autoCompleteTextViewCollege.setAdapter(arrayAdapter_college);
+
+        String[] peopleNumArray = getResources().getStringArray(R.array.people_num_dropdown_menu);
+        ArrayAdapter<String> arrayAdapter_people_num = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, peopleNumArray);
+        AutoCompleteTextView autoCompleteTextViewPeopleNum = searchView.findViewById(R.id.autoCompleteTextView_people_num);
+        autoCompleteTextViewPeopleNum.setAdapter(arrayAdapter_people_num);
+
+        // 로그 출력하는 부분
+        autoCompleteTextViewCollege.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCollege = (String) parent.getItemAtPosition(position);
+                Log.d("SearchFragment", selectedCollege);
+                autoCompleteTextViewCollege.setText(selectedCollege, false);
+            }
+        });
+
+        autoCompleteTextViewPeopleNum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 드롭다운에서 아이템을 골랐을 때 selectedPeopleNum이라는 arraylist에 문자열 저장
+                String selectedPeopleNum = (String) parent.getItemAtPosition(position);
+                Log.d("SearchFragment", selectedPeopleNum);
+                autoCompleteTextViewPeopleNum.setText(selectedPeopleNum, false);
+            }
+        });
+
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // searchView 삭제
+                removeView(searchView);
+            }
+        });
+
+        binding.searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Integer> map = new HashMap<>();
+                // layout_list_search 레이아웃 내의 모든 searchView의 단과대와 인원수를 가져와 map에 저장
+                for (int i = 0; i < binding.layoutListSearch.getChildCount(); i++) {
+                    View view = binding.layoutListSearch.getChildAt(i);
+                    AutoCompleteTextView autoCompleteTextViewCollege = view.findViewById(R.id.autoCompleteTextView_college);
+                    AutoCompleteTextView autoCompleteTextViewPeopleNum = view.findViewById(R.id.autoCompleteTextView_people_num);
+
+
+                    String college = autoCompleteTextViewCollege.getText().toString();
+                    String peopleNum = autoCompleteTextViewPeopleNum.getText().toString();
+
+                    if (college.length() > 0 && peopleNum.length() > 0) {
+                        map.put(college, Integer.parseInt(peopleNum));
+                    }
+                }
+
+                // map의 키와 값을 로그로 출력
+                for (String key : map.keySet()) {
+                    Log.d("SearchFragment", "key: " + key + ", value: " + map.get(key));
+                }
+
+                //selectedColleges와 selectedPeopleNums의 저장된 문자열의 개수중 작은 값을 size로 설정
+                //드롭다운 단과대와 인원수 2개중에 1개의 값만 선택했을 때는 검색에 반영 안되도록 하기 위함.
+//                int size = Math.min(selectedColleges.size(), selectedPeopleNums.size());
+//                //리스트를 저장해줄 StringBuilder
+//                StringBuilder logBuilder = new StringBuilder();
+//                //logBuilder에 값 저장
+//                for (int i = 0; i < size; i++) {
+//                    String college = selectedColleges.get(i);
+//                    String peopleNum = selectedPeopleNums.get(i);
+//                    if (i < size - 1) {
+//                        logBuilder.append("{\"college\": \"").append(college)
+//                                .append("\", \"participants\": ").append(peopleNum).append("\"}, ");
+//                    } else {
+//                        logBuilder.append("{\"college\": \"").append(college)
+//                                .append("\", \"participants\": ").append(peopleNum).append("\"}");
+//                    }
+//                }
+//                //size의 개수와 리스트 출력
+//                Log.d("SearchFragment", " " + size);
+//                Log.d("SearchFragment", logBuilder.toString());
+            }
+        });
+
+        binding.layoutListSearch.addView(searchView);
+    }
+
+    private void removeView(View view) {
+        binding.layoutListSearch.removeView(view);
     }
 }
