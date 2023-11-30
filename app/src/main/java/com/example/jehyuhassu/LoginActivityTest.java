@@ -41,11 +41,11 @@ public class LoginActivityTest extends AppCompatActivity {
 
         //user info
         //signup user info
-        studentId = "20201854";
-        pw = "user2pw";
-        name = "김민비";
-        college = "사회과학대학";
-        department = "사회학부";
+        studentId = "20201855";
+        pw = "user3pw";
+        name = "박민비";
+        college = "IT대학";
+        department = "컴퓨터학부";
 
         signup_btn = findViewById(R.id.u_SAINT_login_btn);
         signup_btn.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +60,7 @@ public class LoginActivityTest extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                checkUserInfo("20201854");
+                deleteUserInfo("20201850");
 
             }
         });
@@ -86,57 +86,36 @@ public class LoginActivityTest extends AppCompatActivity {
                 });
     }
 
-    private void deleteUserInfo(String studentId, String pw){
+    private void deleteUserInfo(String studentId){
+        mDatabase.child("Users").child(studentId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // 데이터 삭제 성공
+                    Log.d("FirebaseExample", "데이터 삭제 성공!");
+                } else {
+                    // 데이터 삭제 실패
+                    Log.e("FirebaseExample", "데이터 삭제 실패", task.getException());
+                }
+            }
+        });
 
     }
 
     private void checkUserInfo(String studentId){
         // 데이터베이스에서 해당 학번의 사용자 정보 조회
-        mDatabase.child("Users").child(studentId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    // 사용자 정보가 존재함
-                    // dataSnapshot.getValue(User.class)를 사용하여 사용자 정보를 가져올 수 있음
-                    Toast.makeText(LoginActivityTest.this, "사용자 정보가 존재합니다.", Toast.LENGTH_SHORT).show();
-//                    User user = snapshot.getValue(User.class);
-//                    if (user != null){
-//                        Log.d("minb","user: "+user.getStudentId()+user.getPassword()+user.getName()+user.getCollege()+user.getDepartment());
-//                    }else{
-//                        Log.d("minb", "user: null");
-//                    }
-                    // 데이터가 존재할 때의 처리
-                    String name = snapshot.child("name").getValue(String.class);
-                    String college = snapshot.child("college").getValue(String.class);
-                    Log.d("minb", "Name: " + name + ", college: " + college);
-
-
-                } else {
-                    // 사용자 정보가 존재하지 않음
-                    Toast.makeText(LoginActivityTest.this, "사용자 정보가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // 조회 중 오류 발생
-                Toast.makeText(LoginActivityTest.this, "데이터베이스 조회 오류", Toast.LENGTH_SHORT).show();
-            }
-        });
-//        mDatabase.child("Users").child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
+//        mDatabase.child("Users").child(studentId).addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                if (snapshot.exists()) {
 //                    // 사용자 정보가 존재함
-//                    // dataSnapshot.getValue(User.class)를 사용하여 사용자 정보를 가져올 수 있음
 //                    Toast.makeText(LoginActivityTest.this, "사용자 정보가 존재합니다.", Toast.LENGTH_SHORT).show();
-//                    User user = snapshot.getValue(User.class);
-//                    if (user != null){
-//                        Log.d("minb","user: "+user.getStudentId()+user.getPassword()+user.getName()+user.getCollege()+user.getDepartment());
-//                    }else{
-//                        Log.d("minb", "user: null");
-//                    }
-//
+//                    // 데이터가 존재할 때의 처리
+//                    String pw = snapshot.child("password").getValue(String.class);
+//                    String name = snapshot.child("name").getValue(String.class);
+//                    String college = snapshot.child("college").getValue(String.class);
+//                    String department = snapshot.child("department").getValue(String.class);
+//                    Log.d("minb", "Name: " + name + ", college: " + college + ", department: " + department + ", pw" + pw);
 //                } else {
 //                    // 사용자 정보가 존재하지 않음
 //                    Toast.makeText(LoginActivityTest.this, "사용자 정보가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
@@ -149,5 +128,33 @@ public class LoginActivityTest extends AppCompatActivity {
 //                Toast.makeText(LoginActivityTest.this, "데이터베이스 조회 오류", Toast.LENGTH_SHORT).show();
 //            }
 //        });
+
+        mDatabase.child("Users").child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // 사용자 정보가 존재함
+                    Toast.makeText(LoginActivityTest.this, "사용자 정보가 존재합니다.", Toast.LENGTH_SHORT).show();
+                    // 데이터가 존재할 때의 처리
+                    String pw = snapshot.child("password").getValue(String.class);
+                    String name = snapshot.child("name").getValue(String.class);
+                    String college = snapshot.child("college").getValue(String.class);
+                    String department = snapshot.child("department").getValue(String.class);
+                    Log.d("minb", "Name: " + name + ", college: " + college + ", department: " + department + ", pw" + pw);
+                } else {
+                    // 사용자 정보가 존재하지 않음
+                    Toast.makeText(LoginActivityTest.this, "사용자 정보가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    Log.d("minb", "사용자 정보 없음");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // 조회 중 오류 발생
+                Toast.makeText(LoginActivityTest.this, "데이터베이스 조회 오류", Toast.LENGTH_SHORT).show();
+                Log.d("minb", "데이터베이스 조회 오류");
+            }
+        });
+
     }
 }
