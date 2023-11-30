@@ -19,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivityTest extends AppCompatActivity {
     //firebase test code
     private FragmentLoginBinding binding;
@@ -60,7 +63,7 @@ public class LoginActivityTest extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                deleteUserInfo("20201850");
+                updateUserInfo("20201855","자연과학대학","건축학부");
 
             }
         });
@@ -157,4 +160,28 @@ public class LoginActivityTest extends AppCompatActivity {
         });
 
     }
+
+    private void updateUserInfo(String studentId, String college, String department){
+        //update fields info
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("college", college); // 첫 번째 필드와 값
+        updates.put("department", department); // 두 번째 필드와 값
+
+        mDatabase.child("Users").child(studentId).updateChildren(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // 데이터 수정 성공
+                    Log.d("minb", "데이터 수정 성공!");
+                } else {
+                    // 데이터 수정 실패
+                    Log.e("minb", "데이터 수정 실패", task.getException());
+                }
+            }
+        });
+
+
+    }
+
+
 }
