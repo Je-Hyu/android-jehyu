@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();   //인스턴스 초기화
 
         //signup user info
-        id = "user1id";
         pw = "user1pw";
         studentId = "20201853";
         name = "서민비";
@@ -65,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // 사용자 등록 성공
                                     FirebaseUser firebaseuser = mFirebaseAuth.getCurrentUser();
-                                    saveUserInfo(id, pw, studentId, name, college, department);
+                                    saveUserInfo(studentId, pw, name, college, department);
                                     Toast.makeText(LoginActivity.this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     // 사용자 등록 실패
@@ -89,9 +88,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserInfo(String id, String pw, String studentId, String name, String college, String department) {
+    private void saveUserInfo(String studentId, String pw, String name, String college, String department) {
         // Firebase Realtime Database를 사용하여 사용자 정보 저장
-        User user = new User(id, pw, studentId, name, college, department);
+        User user = new User(studentId, pw, name, college, department);
         mDatabase.child("Users").child(studentId).setValue(user);
     }
 }

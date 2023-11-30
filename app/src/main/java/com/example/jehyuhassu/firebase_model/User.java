@@ -1,11 +1,21 @@
 package com.example.jehyuhassu.firebase_model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
-    private String studentId, id, pw, name, college, department;
-    public User(String id, String pw, String studentId, String name, String college, String department){
-        this.id=id;
-        this.pw=pw;
+    @SerializedName("studentId")
+    private String studentId;
+    @SerializedName("password")
+    private String pw;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("college")
+    private String college;
+    @SerializedName("department")
+    private String department;
+    public User(String studentId, String pw, String name, String college, String department){
         this.studentId=studentId;
+        this.pw=pw;
         this.name=name;
         this.college=college;
         this.department=department;
@@ -13,9 +23,6 @@ public class User {
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
-    }
-    public void setId(String id) {
-        this.id = id;
     }
     public void setPassword(String pw) {
         this.pw = pw;
@@ -32,9 +39,6 @@ public class User {
 
     public String getStudentId() {
         return this.studentId;
-    }
-    public String getId() {
-        return this.id;
     }
     public String getPassword() {
         return this.pw;
