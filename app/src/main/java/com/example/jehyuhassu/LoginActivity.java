@@ -30,7 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;    //실시간 데이터 베이스 인스턴스
 
     //signup user info
-    private String id, pw, studentId, name, college, department;
+    private int studentId;
+    private String id, pw, name, college, department;
     private Button btn;
 
     @Override
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //signup user info
         pw = "user1pw";
-        studentId = "20201853";
+        studentId = 20201853;
         name = "서민비";
         college = "IT대학";
         department = "컴퓨터학부";
@@ -88,10 +89,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserInfo(String studentId, String pw, String name, String college, String department) {
+    private void saveUserInfo(int studentId, String pw, String name, String college, String department) {
         // Firebase Realtime Database를 사용하여 사용자 정보 저장
         User user = new User(studentId, pw, name, college, department);
-        mDatabase.child("Users").child(studentId).setValue(user);
+        mDatabase.child("Users").child(String.valueOf(studentId)).setValue(user);
     }
 }
 
