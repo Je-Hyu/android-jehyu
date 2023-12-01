@@ -35,11 +35,8 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private EditText studentNumField;
-    private String studentNum;
-    private EditText passwordField;
 
-    private Button loginBtn;
+    private String studentNum;
     private String password;
 
     private RetrofitInterface retrofitInterface;
@@ -48,27 +45,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseFirestore database;
 
-    private String imgUrl = "https://images.unsplash.com/photo-1671716784499-a3d26826d844?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        studentNumField = binding.loginStudentNumEditText;
-        passwordField = binding.loginPasswordEditText;
-        loginBtn = binding.loginBtn;
         retrofitInterface = RetrofitClient.getRetrofit().create(RetrofitInterface.class);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         database = FirebaseFirestore.getInstance();
 
-        loginBtn.setOnClickListener(view -> {
+        binding.loginBtn.setOnClickListener(view -> {
+            studentNum = binding.loginStudentNumEditText.getText().toString();
+            password = binding.loginPasswordEditText.getText().toString();
 
-            studentNum = String.valueOf(studentNumField.getText());
-            password = String.valueOf(passwordField.getText());
-//            Log.d("LoginActivity", studentNum);
-//            Log.d("LoginActivity", password);
             if (studentNum.equals("")) {
                 showToast("학번을 입력해주세요");
             } else if (password.equals("")) {
@@ -88,54 +78,38 @@ public class LoginActivity extends AppCompatActivity {
                             String major = loginResponse.getDept();
                             String name = loginResponse.getName();
                             Member member = new Member(studentNum, department, name, major);
-                            ArrayList<String> memberList = new ArrayList<>();
 
                             database.collection("Member")
-                                    .whereIn("studentNum", Arrays.asList(studentNum))
+                                    .whereEqualTo("studentNum", studentNum)
                                     .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if(task.getResult().getDocuments().size()==0){
-                                                Member member = new Member(studentNum, department, name, major);
-                                                Log.d("LoginActivity", "파이어 스토어접근");
-                                                database.collection("Member").add(member).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                        Log.d("LoginActivity", "파이어스토어 저장");
-                                                        SharedPreferences.Editor editor = preferences.edit();
-                                                        editor.putString("studentNum", studentNum);
-                                                        editor.putString("depart", department);
-                                                        editor.putString("name", name);
-                                                        editor.putString("major", major);
-                                                        editor.putString("img",imgUrl);
-                                                        //항상 commit & apply 를 해주어야 저장이 된다.
-                                                        editor.commit();
-                                                        editor.apply();
-                                                        Log.d("LoginActivity", preferences.getString("studentNum", ""));
-                                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            // firestore에 해당 학번의 멤버가 없다면 추가
+                                            if (task.getResult().getDocuments().isEmpty()) {
+                                                database.collection("Member")
+                                                        .add(member)
+                                                        .addOnCompleteListener(task1 -> {
+                                                            SharedPreferences.Editor editor = preferences.edit();
+                                                            editor.putString("studentNum", studentNum);
+                                                            editor.putString("depart", department);
+                                                            editor.putString("name", name);
+                                                            editor.putString("major", major);
+                                                            editor.apply();
 
-                                                    }
-                                                });
-
-                                            }else{
-
-                                                Log.d("LoginActivity", task.getResult().getDocuments().toString());
-                                                Log.d("LoginActivity", "파이어 스토어접근");
+                                                            Log.d("LoginActivity", preferences.getString("studentNum", ""));
+                                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                        });
+                                            } else { // firestore에 해당 학번의 멤버가 있다면
                                                 SharedPreferences.Editor editor = preferences.edit();
                                                 editor.putString("studentNum", studentNum);
                                                 editor.putString("depart", department);
                                                 editor.putString("name", name);
                                                 editor.putString("major", major);
-                                                editor.putString("img",imgUrl);
-                                                //항상 commit & apply 를 해주어야 저장이 된다.
-                                                editor.commit();
                                                 editor.apply();
+
                                                 Log.d("LoginActivity", preferences.getString("studentNum", ""));
                                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
                                             }
-
                                         }
                                     });
 
@@ -152,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void showToast(String msg){
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+    public void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 }
