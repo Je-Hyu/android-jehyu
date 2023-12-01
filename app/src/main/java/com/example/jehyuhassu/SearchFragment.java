@@ -40,6 +40,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         binding.addButton.setOnClickListener(this);
 
+        // 초기 searchView 하나 추가
+        addView();
+
         return view;
     }
 
@@ -52,12 +55,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         ImageButton removeButton = searchView.findViewById(R.id.remove_button);
 
         String[] regionArray = getResources().getStringArray(R.array.college_dropdown_menu);
-        ArrayAdapter<String> arrayAdapter_college = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, regionArray);
+        ArrayAdapter<String> arrayAdapter_college = new ArrayAdapter<>(getActivity(), R.layout.dropdown_list_item, regionArray);
         AutoCompleteTextView autoCompleteTextViewCollege = searchView.findViewById(R.id.autoCompleteTextView_college);
         autoCompleteTextViewCollege.setAdapter(arrayAdapter_college);
 
         String[] peopleNumArray = getResources().getStringArray(R.array.people_num_dropdown_menu);
-        ArrayAdapter<String> arrayAdapter_people_num = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, peopleNumArray);
+        ArrayAdapter<String> arrayAdapter_people_num = new ArrayAdapter<>(getActivity(), R.layout.dropdown_list_item, peopleNumArray);
         AutoCompleteTextView autoCompleteTextViewPeopleNum = searchView.findViewById(R.id.autoCompleteTextView_people_num);
         autoCompleteTextViewPeopleNum.setAdapter(arrayAdapter_people_num);
 
@@ -112,27 +115,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 for (String key : map.keySet()) {
                     Log.d("SearchFragment", "key: " + key + ", value: " + map.get(key));
                 }
-
-                //selectedColleges와 selectedPeopleNums의 저장된 문자열의 개수중 작은 값을 size로 설정
-                //드롭다운 단과대와 인원수 2개중에 1개의 값만 선택했을 때는 검색에 반영 안되도록 하기 위함.
-//                int size = Math.min(selectedColleges.size(), selectedPeopleNums.size());
-//                //리스트를 저장해줄 StringBuilder
-//                StringBuilder logBuilder = new StringBuilder();
-//                //logBuilder에 값 저장
-//                for (int i = 0; i < size; i++) {
-//                    String college = selectedColleges.get(i);
-//                    String peopleNum = selectedPeopleNums.get(i);
-//                    if (i < size - 1) {
-//                        logBuilder.append("{\"college\": \"").append(college)
-//                                .append("\", \"participants\": ").append(peopleNum).append("\"}, ");
-//                    } else {
-//                        logBuilder.append("{\"college\": \"").append(college)
-//                                .append("\", \"participants\": ").append(peopleNum).append("\"}");
-//                    }
-//                }
-//                //size의 개수와 리스트 출력
-//                Log.d("SearchFragment", " " + size);
-//                Log.d("SearchFragment", logBuilder.toString());
             }
         });
 

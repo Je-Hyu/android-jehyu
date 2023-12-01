@@ -1,21 +1,19 @@
 package com.example.jehyuhassu;
 
-import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
-import com.example.jehyuhassu.databinding.CardListItemBinding;
+import com.example.jehyuhassu.adapter.HomeListAdapter;
 import com.example.jehyuhassu.databinding.FragmentHomeBinding;
 import com.example.jehyuhassu.model.CardListItem;
 
@@ -36,7 +34,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item, getResources().getStringArray(R.array.college_dropdown_menu));
+        adapter = new ArrayAdapter<String>(getActivity(), R.layout.dropdown_list_item, getResources().getStringArray(R.array.college_dropdown_menu));
         binding.collegeAutoCompleteTextView.setAdapter(adapter);
 
         binding.collegeAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,60 +54,5 @@ public class HomeFragment extends Fragment {
         binding.homeRecyclerView.setAdapter(new HomeListAdapter(items));
 
         return view;
-    }
-
-    private class HomeCardViewHolder extends RecyclerView.ViewHolder {
-        private CardListItemBinding binding;
-
-        private HomeCardViewHolder(CardListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-
-        private void bind(CardListItem item) {
-            binding.cardImageView.setImageResource(item.getImage());
-            binding.cardTitleTextView.setText(item.getName());
-            binding.cardTimeTextView.setText(item.getTime());
-            binding.cardCollegeChipView.setText(item.getTags()[0]);
-        }
-
-    }
-
-    private class HomeListAdapter extends RecyclerView.Adapter<HomeCardViewHolder> {
-        private ArrayList<CardListItem> items;
-
-        public HomeListAdapter(ArrayList<CardListItem> items) {
-            this.items = items;
-        }
-
-        @NonNull
-        @Override
-        public HomeCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_list_item, parent, false);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = binding.homeRecyclerView.getChildAdapterPosition(v);
-                    CardListItem item = items.get(position);
-                    Log.d("HomeFragment", "item clicked: " + item.getName());
-                    // start JehyuDetailActivity
-                    Intent intent = new Intent(getActivity(), JehyuDetailActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            return new HomeCardViewHolder(CardListItemBinding.bind(view));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull HomeCardViewHolder holder, int position) {
-            CardListItem item = items.get(position);
-            holder.bind(item);
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
     }
 }

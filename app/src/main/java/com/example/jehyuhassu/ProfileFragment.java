@@ -1,5 +1,6 @@
 package com.example.jehyuhassu;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.example.jehyuhassu.adapter.ProfileListAdapter;
 import com.example.jehyuhassu.databinding.FragmentProfileBinding;
 import com.example.jehyuhassu.databinding.ProfileListItemBinding;
 import com.example.jehyuhassu.model.ProfileListItem;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,13 +36,13 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        String[] titles = {"학번", "이름", "대학(원)", "학과(부)"};
-        String[] contents = {"20203123", "이중곤", "IT대학", "컴퓨터학부"};
-        ArrayList<ProfileListItem> items = new ArrayList<>();
-
-        for (int i = 0; i < titles.length; i++) {
-            items.add(new ProfileListItem(titles[i], contents[i]));
-        }
+        sharedPreferences = getActivity().getSharedPreferences("UserInfo", getActivity().MODE_PRIVATE);
+        ArrayList<ProfileListItem> items = new ArrayList() {{
+            add(new ProfileListItem("학번", sharedPreferences.getString("studentNum", "")));
+            add(new ProfileListItem("이름", sharedPreferences.getString("name", "")));
+            add(new ProfileListItem("대학(원)", sharedPreferences.getString("depart", "")));
+            add(new ProfileListItem("학과(부)", sharedPreferences.getString("major", "")));
+        }};
 
         binding.profileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.profileRecyclerView.setAdapter(new ProfileListAdapter(items));
@@ -61,57 +64,5 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private class ProfileViewHolder extends RecyclerView.ViewHolder {
-        private ProfileListItemBinding binding;
 
-        public ProfileViewHolder(ProfileListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-
-        private void bind(ProfileListItem item, int position) {
-            binding.titleTextView.setText(item.getTitle());
-            binding.contentTextView.setText(item.getContent());
-
-            // Show an arrow if the item is a department or parent department
-            if (position == 2 || position == 3) {
-                binding.arrowImageView.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private class ProfileListAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
-        private ArrayList<ProfileListItem> items;
-
-        public ProfileListAdapter(ArrayList<ProfileListItem> items) {
-            this.items = items;
-        }
-
-        @NonNull
-        @Override
-        public ProfileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_list_item, parent, false);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = binding.profileRecyclerView.getChildAdapterPosition(v);
-                    ProfileListItem item = items.get(position);
-                    Log.d("ProfileFragment", "position=" + position + ", title=" + item.getTitle() + ", content=" + item.getContent());
-                }
-            });
-
-            return new ProfileViewHolder(ProfileListItemBinding.bind(view));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
-            ProfileListItem item = items.get(position);
-            holder.bind(item, position);
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-    }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jehyuhassu.adapter.DetailListAdapter;
 import com.example.jehyuhassu.databinding.ActivityJehyuDetailBinding;
 import com.example.jehyuhassu.databinding.JehyuDetailListItemBinding;
 import com.example.jehyuhassu.model.JehyuDetailListItem;
@@ -38,44 +39,5 @@ public class JehyuDetailActivity extends AppCompatActivity {
 
         binding.jehyuDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.jehyuDetailRecyclerView.setAdapter(new DetailListAdapter(items));
-    }
-
-    private class DetailViewHolder extends RecyclerView.ViewHolder {
-        private JehyuDetailListItemBinding binding;
-
-        private DetailViewHolder(JehyuDetailListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-
-        private void bind(JehyuDetailListItem item) {
-            binding.titleTextView.setText(item.getTitle());
-            binding.contentTextView.setText(item.getContent());
-        }
-    }
-
-    private class DetailListAdapter extends RecyclerView.Adapter<DetailViewHolder> {
-        private ArrayList<JehyuDetailListItem> items;
-
-        public DetailListAdapter(ArrayList<JehyuDetailListItem> items) {
-            this.items = items;
-        }
-
-        @NonNull
-        @Override
-        public DetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new DetailViewHolder(JehyuDetailListItemBinding.inflate(getLayoutInflater(), parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull DetailViewHolder holder, int position) {
-            JehyuDetailListItem item = items.get(position);
-            holder.bind(item);
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
     }
 }
