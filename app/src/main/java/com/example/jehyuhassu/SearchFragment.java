@@ -135,21 +135,22 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
                 // minb: 검색하기 버튼 클릭 시
                 // 가게 저장
-                int participants=1;
-                String storeName="지짐이";
+                int participants=4;
+                String storeName="써브웨이";
                 String location="위치";
-                String startTime="null";
-                String endTime="null";
-                String college = "경영대학";
+                String startTime="07:00";
+                String endTime="23:00";
+                String college = "공과대학";
                 String startDate="2023.09.01";
                 String endDate="2023.12.21";
-                String contents="테이블 당 7만원 이상 주문 시 가격의 10% 이내의 음식 혹은 음료수 등의 서비스 제공(ex. 소주 1병, 주먹밥 등)";
+                String contents="샌드위치 세트 or 샐러드 세트 구매 시 쿠키 1개 증정 (단, 랩 세트, 행사 상품, 단품 제외)";
                 String menu1="메뉴1";
                 String menu2="메뉴2";
                 String menu3="메뉴3";
-                //saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
+
+                saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
                 //findStoreInfoUsingCollege("경영대학");
-                findStoreInfoUsingCollegesAndParticipants(map);
+                //findStoreInfoUsingCollegesAndParticipants(map);
             }
         });
 
@@ -267,7 +268,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     private void saveStoreInfo(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3){
         Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
-        mDatabase.child("Stores").child(storeName).setValue(store)
+        String key= storeName+'('+college.substring(0, 2)+')';
+        mDatabase.child("Stores").child(key).setValue(store)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
