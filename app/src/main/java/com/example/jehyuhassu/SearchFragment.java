@@ -2,6 +2,7 @@ package com.example.jehyuhassu;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -15,7 +16,17 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.jehyuhassu.databinding.FragmentSearchBinding;
+import com.example.jehyuhassu.firebase_model.Store;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +38,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
+    //minb: 리얼타임 데이터 베이스 인스턴스
+    private DatabaseReference mDatabase;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +51,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        //minb: 리얼타임 데이터 베이스 인스턴스 초기화
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         binding.addButton.setOnClickListener(this);
 
@@ -115,10 +132,155 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 for (String key : map.keySet()) {
                     Log.d("SearchFragment", "key: " + key + ", value: " + map.get(key));
                 }
+
+                // minb: 검색하기 버튼 클릭 시
+                // 가게 저장
+                int participants=1;
+                String storeName="지짐이";
+                String location="위치";
+                String startTime="null";
+                String endTime="null";
+                String college = "경영대학";
+                String startDate="2023.09.01";
+                String endDate="2023.12.21";
+                String contents="테이블 당 7만원 이상 주문 시 가격의 10% 이내의 음식 혹은 음료수 등의 서비스 제공(ex. 소주 1병, 주먹밥 등)";
+                String menu1="메뉴1";
+                String menu2="메뉴2";
+                String menu3="메뉴3";
+                //saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
+                //findStoreInfoUsingCollege("경영대학");
+                findStoreInfoUsingCollegesAndParticipants(map);
             }
         });
 
         binding.layoutListSearch.addView(searchView);
+    }
+
+    private void findStoreInfoUsingCollegesAndParticipants(Map<String, Integer> inputMap){
+        Map<String, Object> storesMap = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : inputMap.entrySet()) {
+            String target_college = entry.getKey();
+            Integer target_participants = entry.getValue();
+
+            Log.d("findStoreInfoUsingCollegesAndParticipants","College: " + target_college + ", People Num: " + target_participants);
+
+            // college 필드를 기반으로 데이터 조회
+            Query query = mDatabase.child("Stores").orderByChild("college").equalTo(target_college);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot storeSnapshot : snapshot.getChildren()) {
+                        // 조회된 데이터에 대한 처리
+                        int participants = storeSnapshot.child("participants").getValue(Integer.class).intValue();
+                        if (participants <= target_participants){
+                            String storeName = storeSnapshot.child("storeName").getValue(String.class);
+                            String location = storeSnapshot.child("location").getValue(String.class);
+                            String startTime = storeSnapshot.child("startTime").getValue(String.class);
+                            String endTime = storeSnapshot.child("endTime").getValue(String.class);
+                            String college = storeSnapshot.child("college").getValue(String.class);
+                            String startDate = storeSnapshot.child("startDate").getValue(String.class);
+                            String endDate = storeSnapshot.child("endDate").getValue(String.class);
+                            String contents = storeSnapshot.child("contents").getValue(String.class);
+                            String menu1 = storeSnapshot.child("menu1").getValue(String.class);
+                            String menu2 = storeSnapshot.child("menu2").getValue(String.class);
+                            String menu3 = storeSnapshot.child("menu3").getValue(String.class);
+
+                            Log.d("findStoreInfoUsingCollegesAndParticipants", "가게명: " + storeName + ", 위치: " + location +
+                                    ", 참가자수: " + participants + ", 운영 시작 시간: " + startTime +
+                                    ", 운영 마감 시간: " + endTime + ", 단과대: " + college +
+                                    ", 시작 날짜: " + startDate + ", 종료 날짜: " + endDate +
+                                    ", 내용: " + contents + ", 메뉴1: " + menu1 +
+                                    ", 메뉴2: " + menu2 + ", 메뉴3: " + menu3);
+
+                            // 조회된 데이터를 Map에 저장
+                            storesMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
+
+                        }
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("findStoreInfoUsingCollegesAndParticipants", "데이터 조회 중 오류: " + error.getMessage());
+                }
+            });
+        }
+    }
+
+    private void findStoreInfoUsingCollege(String college){
+        // college 필드를 기반으로 데이터 조회
+        Query query = mDatabase.child("Stores").orderByChild("college").equalTo(college);
+        Map<String, Object> storeMap = new HashMap<>();
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot storeSnapshot : snapshot.getChildren()) {
+                    // 조회된 데이터에 대한 처리
+                    int participants = storeSnapshot.child("participants").getValue(Integer.class).intValue();
+                    String storeName = storeSnapshot.child("storeName").getValue(String.class);
+                    String location = storeSnapshot.child("location").getValue(String.class);
+                    String startTime = storeSnapshot.child("startTime").getValue(String.class);
+                    String endTime = storeSnapshot.child("endTime").getValue(String.class);
+                    String college = storeSnapshot.child("college").getValue(String.class);  // 수정
+                    String startDate = storeSnapshot.child("startDate").getValue(String.class);  // 수정
+                    String endDate = storeSnapshot.child("endDate").getValue(String.class);  // 수정
+                    String contents = storeSnapshot.child("contents").getValue(String.class);  // 수정
+                    String menu1 = storeSnapshot.child("menu1").getValue(String.class);  // 수정
+                    String menu2 = storeSnapshot.child("menu2").getValue(String.class);  // 수정
+                    String menu3 = storeSnapshot.child("menu3").getValue(String.class);  // 수정
+
+                    Log.d("store", "가게명: " + storeName + ", 위치: " + location +
+                            ", 참가자수: " + participants + ", 운영 시작 시간: " + startTime +
+                            ", 운영 마감 시간: " + endTime + ", 단과대: " + college +
+                            ", 시작 날짜: " + startDate + ", 종료 날짜: " + endDate +
+                            ", 내용: " + contents + ", 메뉴1: " + menu1 +
+                            ", 메뉴2: " + menu2 + ", 메뉴3: " + menu3);
+
+                    // 조회된 데이터를 Map에 저장
+                    storeMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
+                }
+
+                // 앞서 생성한 storeMap을 사용하여 StoreData를 출력하는 코드
+                for (Map.Entry<String, Object> entry : storeMap.entrySet()) {
+                    String storeName = entry.getKey();
+                    Store storeData = (Store) entry.getValue();
+
+                    // Store 정보 출력
+                    Log.d("store", "가게명: " + storeData.getStoreName() + ", 위치: " + storeData.getLocation() +
+                            ", 참가자수: " + storeData.getParticipants() + ", 운영 시작 시간: " + storeData.getStartTime() +
+                            ", 운영 마감 시간: " + storeData.getEndTime() + ", 단과대: " + storeData.getCollege() +
+                            ", 시작 날짜: " + storeData.getStartDate() + ", 종료 날짜: " + storeData.getEndDate() +
+                            ", 내용: " + storeData.getContents() + ", 메뉴1: " + storeData.getMenu1() +
+                            ", 메뉴2: " + storeData.getMenu2() + ", 메뉴3: " + storeData.getMenu3());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("store", "데이터 조회 중 오류: " + error.getMessage());
+            }
+        });
+    }
+
+    private void saveStoreInfo(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3){
+        Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
+        mDatabase.child("Stores").child(storeName).setValue(store)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // 데이터 저장 성공
+                            Log.d("store", "데이터 저장 성공!");
+
+                        } else {
+                            // 데이터 저장 실패
+                            Log.e("store", "데이터 저장 실패", task.getException());
+                        }
+                    }
+                });
     }
 
     private void removeView(View view) {
