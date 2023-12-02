@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SearchFragment extends Fragment implements View.OnClickListener {
 
@@ -134,37 +135,57 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 }
 
                 // minb: 검색하기 버튼 클릭 시
-                // 가게 저장
-                int participants=4;
-                String storeName="써브웨이";
+                // 가게 정보 저장
+                int participants=1;
+                String storeName="청운음식점";
                 String location="위치";
-                String startTime="07:00";
-                String endTime="23:00";
-                String college = "공과대학";
+                String startTime="11:00";
+                String endTime="24:00";
+                String college = "경영대학";
                 String startDate="2023.09.01";
                 String endDate="2023.12.21";
-                String contents="샌드위치 세트 or 샐러드 세트 구매 시 쿠키 1개 증정 (단, 랩 세트, 행사 상품, 단품 제외)";
+                String contents="한 테이블 당 4인 이하 방문하여 6만원 이상 주문 혹은 5인 이상 방문하여 7만원 이상 주문 시 음료(500ml) 1개 제공";
                 String menu1="메뉴1";
                 String menu2="메뉴2";
                 String menu3="메뉴3";
 
-                saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
+                //saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
                 //findStoreInfoUsingCollege("경영대학");
-                //findStoreInfoUsingCollegesAndParticipants(map);
+
+                findStoreInfoUsingCollegesAndParticipants(map, new findStoreInfoUsingCollegesAndParticipantsListener() {
+                    @Override
+                    public void onStoresMapReady(Map<String, Object> storesMap) {
+                        for (Map.Entry<String, Object> entry : storesMap.entrySet()) {
+                            String storeName = entry.getKey();
+                            Store storeData = (Store) entry.getValue();
+
+                            // Store 정보 출력
+                            Log.d("findStoreInfoUsingCollegesAndParticipants(final)", "가게명: " + storeData.getStoreName() + ", 위치: " + storeData.getLocation() +
+                                    ", 참가자수: " + storeData.getParticipants() + ", 운영 시작 시간: " + storeData.getStartTime() +
+                                    ", 운영 마감 시간: " + storeData.getEndTime() + ", 단과대: " + storeData.getCollege() +
+                                    ", 시작 날짜: " + storeData.getStartDate() + ", 종료 날짜: " + storeData.getEndDate() +
+                                    ", 내용: " + storeData.getContents() + ", 메뉴1: " + storeData.getMenu1() +
+                                    ", 메뉴2: " + storeData.getMenu2() + ", 메뉴3: " + storeData.getMenu3());
+                        }
+                    }
+                });
             }
         });
 
         binding.layoutListSearch.addView(searchView);
     }
 
-    private void findStoreInfoUsingCollegesAndParticipants(Map<String, Integer> inputMap){
+    private interface findStoreInfoUsingCollegesAndParticipantsListener {
+        void onStoresMapReady(Map<String, Object> storesMap);
+    }
+    private void findStoreInfoUsingCollegesAndParticipants(Map<String, Integer> inputMap, findStoreInfoUsingCollegesAndParticipantsListener listener){
         Map<String, Object> storesMap = new HashMap<>();
+        int totalQueries = inputMap.size();
+        AtomicInteger completedQueries = new AtomicInteger(0);
 
         for (Map.Entry<String, Integer> entry : inputMap.entrySet()) {
             String target_college = entry.getKey();
             Integer target_participants = entry.getValue();
-
-            Log.d("findStoreInfoUsingCollegesAndParticipants","College: " + target_college + ", People Num: " + target_participants);
 
             // college 필드를 기반으로 데이터 조회
             Query query = mDatabase.child("Stores").orderByChild("college").equalTo(target_college);
@@ -187,20 +208,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             String menu2 = storeSnapshot.child("menu2").getValue(String.class);
                             String menu3 = storeSnapshot.child("menu3").getValue(String.class);
 
-                            Log.d("findStoreInfoUsingCollegesAndParticipants", "가게명: " + storeName + ", 위치: " + location +
-                                    ", 참가자수: " + participants + ", 운영 시작 시간: " + startTime +
-                                    ", 운영 마감 시간: " + endTime + ", 단과대: " + college +
-                                    ", 시작 날짜: " + startDate + ", 종료 날짜: " + endDate +
-                                    ", 내용: " + contents + ", 메뉴1: " + menu1 +
-                                    ", 메뉴2: " + menu2 + ", 메뉴3: " + menu3);
-
                             // 조회된 데이터를 Map에 저장
                             storesMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
 
                         }
                     }
 
+                    // 현재 쿼리 완료 수 증가
+                    completedQueries.incrementAndGet();
 
+                    // 모든 쿼리 완료 시 listener 호출
+                    if (completedQueries.get() == totalQueries) {
+                        listener.onStoresMapReady(storesMap);
+                    }
                 }
 
                 @Override
@@ -225,20 +245,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     String location = storeSnapshot.child("location").getValue(String.class);
                     String startTime = storeSnapshot.child("startTime").getValue(String.class);
                     String endTime = storeSnapshot.child("endTime").getValue(String.class);
-                    String college = storeSnapshot.child("college").getValue(String.class);  // 수정
-                    String startDate = storeSnapshot.child("startDate").getValue(String.class);  // 수정
-                    String endDate = storeSnapshot.child("endDate").getValue(String.class);  // 수정
-                    String contents = storeSnapshot.child("contents").getValue(String.class);  // 수정
-                    String menu1 = storeSnapshot.child("menu1").getValue(String.class);  // 수정
-                    String menu2 = storeSnapshot.child("menu2").getValue(String.class);  // 수정
-                    String menu3 = storeSnapshot.child("menu3").getValue(String.class);  // 수정
-
-                    Log.d("store", "가게명: " + storeName + ", 위치: " + location +
-                            ", 참가자수: " + participants + ", 운영 시작 시간: " + startTime +
-                            ", 운영 마감 시간: " + endTime + ", 단과대: " + college +
-                            ", 시작 날짜: " + startDate + ", 종료 날짜: " + endDate +
-                            ", 내용: " + contents + ", 메뉴1: " + menu1 +
-                            ", 메뉴2: " + menu2 + ", 메뉴3: " + menu3);
+                    String college = storeSnapshot.child("college").getValue(String.class);
+                    String startDate = storeSnapshot.child("startDate").getValue(String.class);
+                    String endDate = storeSnapshot.child("endDate").getValue(String.class);
+                    String contents = storeSnapshot.child("contents").getValue(String.class);
+                    String menu1 = storeSnapshot.child("menu1").getValue(String.class);
+                    String menu2 = storeSnapshot.child("menu2").getValue(String.class);
+                    String menu3 = storeSnapshot.child("menu3").getValue(String.class);
 
                     // 조회된 데이터를 Map에 저장
                     storeMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
@@ -275,11 +288,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // 데이터 저장 성공
-                            Log.d("store", "데이터 저장 성공!");
+                            Log.d("store", "가게 정보 저장 성공!");
 
                         } else {
                             // 데이터 저장 실패
-                            Log.e("store", "데이터 저장 실패", task.getException());
+                            Log.e("store", "가게 정보 저장 실패", task.getException());
                         }
                     }
                 });
