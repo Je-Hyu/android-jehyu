@@ -46,8 +46,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
 
-    private FirebaseFirestore database;
-
     //minb: 리얼타임 데이터 베이스 인스턴스
     private DatabaseReference mDatabase;
 
@@ -59,10 +57,8 @@ public class LoginActivity extends AppCompatActivity {
 
         //minb: 리얼타임 데이터 베이스 인스턴스 초기화
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
         retrofitInterface = RetrofitClient.getRetrofit().create(RetrofitInterface.class);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
-        database = FirebaseFirestore.getInstance();
 
         binding.loginBtn.setOnClickListener(view -> {
             Log.d("seo", "로그인 버튼 클릭");
@@ -90,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             //minb: 회원가입 함수 호출
                             Log.d("seo", "회원가입 함수 호출 전");
-                            saveUserInfo(Integer.parseInt(studentNum), password,name, department, major);
+                            saveUserInfo(Integer.parseInt(studentNum), password, name, department, major);
                             Log.d("seo", "회원가입 함수 호출 후");
                         }
                     }

@@ -9,10 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.jehyuhassu.JehyuDetailActivity;
+import com.example.jehyuhassu.MyAppGlideModule;
 import com.example.jehyuhassu.R;
 import com.example.jehyuhassu.databinding.CardListItemBinding;
 import com.example.jehyuhassu.model.CardListItem;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -61,10 +65,19 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeCa
         }
 
         private void bind(CardListItem item) {
-            binding.cardImageView.setImageResource(item.getImage());
+            // Get a default Storage bucket
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+            // Create a reference to a file from a Google Cloud Storage URI
+            StorageReference gsReference = storage.getReferenceFromUrl(item.getImage());
+            Log.d("gsReference", gsReference.toString());
+
+            Glide.with(binding.getRoot().getContext())
+                    .load(gsReference)
+                    .into(binding.cardImageView);
             binding.cardTitleTextView.setText(item.getName());
             binding.cardTimeTextView.setText(item.getTime());
-            binding.cardCollegeChipView.setText(item.getTags()[0]);
+            binding.cardCollegeChipView.setText(item.getTag());
         }
 
     }
