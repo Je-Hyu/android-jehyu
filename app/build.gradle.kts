@@ -47,6 +47,16 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     // Add the dependency for the Cloud Storage library
     implementation("com.google.firebase:firebase-storage")
+    // Firebase 실시간 데이터베이스
+    implementation("com.google.firebase:firebase-database")
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-auth")
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+    // Skip this if you don't want to use integration libraries or configure Glide.
+    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
+    // FirebaseUI Storage only
+    implementation ("com.firebaseui:firebase-ui-storage:7.2.0")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
@@ -54,11 +64,4 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    //firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth:22.3.0")
-    implementation("com.google.firebase:firebase-database:20.3.0")
-    implementation("com.google.firebase:firebase-firestore:24.9.1")
 }
