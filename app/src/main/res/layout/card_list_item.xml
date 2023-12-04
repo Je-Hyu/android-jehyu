@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/cardImageView"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="175dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
@@ -26,26 +26,26 @@
 
             <TextView
                 android:id="@+id/cardTitleTextView"
-                style="@style/Title3"
+                style="@style/Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="업체 이름" />
 
             <TextView
                 android:id="@+id/cardTimeTextView"
-                style="@style/Body1"
+                style="@style/Body2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="운영 시간"
                 android:textColor="@color/gray_400" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/cardCollegeChipView"
-                style="@style/Button1"
+                style="@style/Button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:checkable="false"
                 android:clickable="false"
                 android:text="단과대"
@@ -53,7 +53,7 @@
                 android:textStyle="bold"
                 app:chipBackgroundColor="@color/secondary"
                 app:chipEndPadding="4dp"
-                app:chipMinHeight="25dp"
+                app:chipMinHeight="20dp"
                 app:chipMinTouchTargetSize="0dp"
                 app:chipStartPadding="4dp"
                 app:chipStrokeColor="@color/secondary">

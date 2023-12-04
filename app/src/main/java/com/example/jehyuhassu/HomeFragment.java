@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
                 .orderByChild("college")
                 .equalTo(college);
         Map<String, Object> storeMap = new HashMap<>();
-        ArrayList<CardListItem> items = new ArrayList<>();
+        ArrayList<Store> items = new ArrayList<>();
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -90,9 +90,10 @@ public class HomeFragment extends Fragment {
                     String menu3 = storeSnapshot.child("menu3").getValue(String.class);
                     String image = storeSnapshot.child("image").getValue(String.class);
 
-                    items.add(new CardListItem(image, storeName, startTime + " ~ " + endTime, college));
+                    Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3, image);
+                    items.add(store);
                     // 조회된 데이터를 Map에 저장
-                    storeMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
+                    storeMap.put(storeName, store);
                 }
 
                 binding.homeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
