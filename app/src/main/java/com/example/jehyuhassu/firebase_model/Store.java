@@ -2,7 +2,9 @@ package com.example.jehyuhassu.firebase_model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Store {
+import java.io.Serializable;
+
+public class Store implements Serializable {
     @SerializedName("participants")
     private int participants;
     @SerializedName("storeName")
@@ -28,7 +30,10 @@ public class Store {
     @SerializedName("menu3")
     private String menu3;
 
-    public Store(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3) {
+    @SerializedName("image")
+    private String image;
+
+    public Store(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3, String image) {
         this.participants = participants;
         this.storeName = storeName;
         this.location = location;
@@ -41,6 +46,7 @@ public class Store {
         this.menu1 = menu1;
         this.menu2 = menu2;
         this.menu3 = menu3;
+        this.image = image;
     }
 
     public void setParticipants(int participants) {
@@ -91,6 +97,10 @@ public class Store {
         this.menu3 = menu3;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public int getParticipants() {
         return participants;
     }
@@ -137,6 +147,10 @@ public class Store {
 
     public String getMenu3() {
         return menu3;
+    }
+
+    public String getImage() {
+        return image;
     }
 }
 

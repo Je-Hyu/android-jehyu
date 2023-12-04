@@ -22,6 +22,7 @@
         <TextView
             android:id="@+id/contentTextView"
             style="@style/Body1"
+            android:lineSpacingExtra="4sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

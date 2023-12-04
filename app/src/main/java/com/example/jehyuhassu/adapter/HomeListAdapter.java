@@ -14,6 +14,7 @@ import com.example.jehyuhassu.JehyuDetailActivity;
 import com.example.jehyuhassu.MyAppGlideModule;
 import com.example.jehyuhassu.R;
 import com.example.jehyuhassu.databinding.CardListItemBinding;
+import com.example.jehyuhassu.firebase_model.Store;
 import com.example.jehyuhassu.model.CardListItem;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -21,9 +22,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeCardViewHolder> {
-    private ArrayList<CardListItem> items;
+    private ArrayList<Store> items;
 
-    public HomeListAdapter(ArrayList<CardListItem> items) {
+    public HomeListAdapter(ArrayList<Store> items) {
         this.items = items;
     }
 
@@ -37,18 +38,19 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeCa
 
     @Override
     public void onBindViewHolder(@NonNull HomeCardViewHolder holder, int position) {
-        CardListItem item = items.get(position);
+        Store store = items.get(position);
 
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("[HomeListAdapter]", "onClick: " + item.getName());
+                Log.d("[HomeListAdapter]", "onClick: " + store.getStoreName());
                 Intent intent = new Intent(holder.itemView.getContext(), JehyuDetailActivity.class);
+                intent.putExtra("Store", store);
                 holder.binding.getRoot().getContext().startActivity(intent);
             }
         });
 
-        holder.bind(item);
+        holder.bind(store);
     }
 
     @Override
@@ -64,20 +66,18 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeCa
             this.binding = binding;
         }
 
-        private void bind(CardListItem item) {
+        private void bind(Store store) {
             // Get a default Storage bucket
             FirebaseStorage storage = FirebaseStorage.getInstance();
-
             // Create a reference to a file from a Google Cloud Storage URI
-            StorageReference gsReference = storage.getReferenceFromUrl(item.getImage());
-            Log.d("gsReference", gsReference.toString());
+            StorageReference gsReference = storage.getReferenceFromUrl(store.getImage());
 
             Glide.with(binding.getRoot().getContext())
                     .load(gsReference)
                     .into(binding.cardImageView);
-            binding.cardTitleTextView.setText(item.getName());
-            binding.cardTimeTextView.setText(item.getTime());
-            binding.cardCollegeChipView.setText(item.getTag());
+            binding.cardTitleTextView.setText(store.getStoreName());
+            binding.cardTimeTextView.setText(store.getStartTime() + " ~ " + store.getEndTime());
+            binding.cardCollegeChipView.setText(store.getCollege());
         }
 
     }
