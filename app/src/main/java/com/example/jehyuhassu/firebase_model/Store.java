@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 public class Store {
     @SerializedName("participants")
     private int participants;
+    @SerializedName("imgPath")
+    private String imgPath;
     @SerializedName("storeName")
     private String storeName;
     @SerializedName("location")
@@ -28,7 +30,7 @@ public class Store {
     @SerializedName("menu3")
     private String menu3;
 
-    public Store(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3) {
+    public Store(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3, String imgPath) {
         this.participants = participants;
         this.storeName = storeName;
         this.location = location;
@@ -41,15 +43,16 @@ public class Store {
         this.menu1 = menu1;
         this.menu2 = menu2;
         this.menu3 = menu3;
+        this.imgPath=imgPath;
     }
 
     public void setParticipants(int participants) {
         this.participants = participants;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
+    public void setImgPath(String imgPath) { this.imgPath = imgPath; }
+
+    public void setStoreName(String storeName) { this.storeName = storeName; }
 
     public void setLocation(String location) {
         this.location = location;
@@ -95,6 +98,8 @@ public class Store {
         return participants;
     }
 
+    public String getImgPath() { return imgPath; }
+
     public String getStoreName() {
         return storeName;
     }
@@ -139,4 +144,3 @@ public class Store {
         return menu3;
     }
 }
-
