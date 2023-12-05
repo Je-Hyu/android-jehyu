@@ -137,20 +137,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 // minb: 검색하기 버튼 클릭 시
                 // 가게 정보 저장
                 int participants=1;
-                String storeName="청운음식점";
-                String location="위치";
-                String startTime="11:00";
-                String endTime="24:00";
-                String college = "경영대학";
+                String storeName="28청춘 2호점";
+                String location="서울 동작구 사당로 16 2층";
+                String startTime="16:00";
+                String endTime="02:00";
+                String college = "인문대학";
                 String startDate="2023.09.01";
                 String endDate="2023.12.21";
-                String contents="한 테이블 당 4인 이하 방문하여 6만원 이상 주문 혹은 5인 이상 방문하여 7만원 이상 주문 시 음료(500ml) 1개 제공";
-                String menu1="메뉴1";
-                String menu2="메뉴2";
-                String menu3="메뉴3";
+                String contents="18시 이전 방문 시, 테이블당 소주 혹은 맥주 1병 제공";
+                String menu1="순두부찌개";
+                String menu2="묵사발";
+                String menu3="쫄순이";
+                String imgPath="gs://jehyuhassu-495e3.appspot.com/28청춘2호점.jfif";
 
-                //saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
-                //findStoreInfoUsingCollege("경영대학");
+                //saveStoreInfo(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3, imgPath);
+                //findStoreInfoUsingCollege("인문대학");
 
                 findStoreInfoUsingCollegesAndParticipants(map, new findStoreInfoUsingCollegesAndParticipantsListener() {
                     @Override
@@ -165,7 +166,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                                     ", 운영 마감 시간: " + storeData.getEndTime() + ", 단과대: " + storeData.getCollege() +
                                     ", 시작 날짜: " + storeData.getStartDate() + ", 종료 날짜: " + storeData.getEndDate() +
                                     ", 내용: " + storeData.getContents() + ", 메뉴1: " + storeData.getMenu1() +
-                                    ", 메뉴2: " + storeData.getMenu2() + ", 메뉴3: " + storeData.getMenu3());
+                                    ", 메뉴2: " + storeData.getMenu2() + ", 메뉴3: " + storeData.getMenu3() + ", 이미지: " +  storeData.getImgPath());
                         }
                     }
                 });
@@ -207,9 +208,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             String menu1 = storeSnapshot.child("menu1").getValue(String.class);
                             String menu2 = storeSnapshot.child("menu2").getValue(String.class);
                             String menu3 = storeSnapshot.child("menu3").getValue(String.class);
+                            String imgPath = storeSnapshot.child("imgPath").getValue(String.class);
 
                             // 조회된 데이터를 Map에 저장
-                            storesMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
+                            storesMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3, imgPath));
 
                         }
                     }
@@ -252,9 +254,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     String menu1 = storeSnapshot.child("menu1").getValue(String.class);
                     String menu2 = storeSnapshot.child("menu2").getValue(String.class);
                     String menu3 = storeSnapshot.child("menu3").getValue(String.class);
+                    String imgPath = storeSnapshot.child("imgPath").getValue(String.class);
 
                     // 조회된 데이터를 Map에 저장
-                    storeMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3));
+                    storeMap.put(storeName, new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3, imgPath));
                 }
 
                 // 앞서 생성한 storeMap을 사용하여 StoreData를 출력하는 코드
@@ -268,7 +271,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             ", 운영 마감 시간: " + storeData.getEndTime() + ", 단과대: " + storeData.getCollege() +
                             ", 시작 날짜: " + storeData.getStartDate() + ", 종료 날짜: " + storeData.getEndDate() +
                             ", 내용: " + storeData.getContents() + ", 메뉴1: " + storeData.getMenu1() +
-                            ", 메뉴2: " + storeData.getMenu2() + ", 메뉴3: " + storeData.getMenu3());
+                            ", 메뉴2: " + storeData.getMenu2() + ", 메뉴3: " + storeData.getMenu3() + ", 이미지: " + storeData.getImgPath());
                 }
             }
 
@@ -279,8 +282,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void saveStoreInfo(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3){
-        Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3);
+    private void saveStoreInfo(int participants, String storeName, String location, String startTime, String endTime, String college, String startDate, String endDate, String contents, String menu1, String menu2, String menu3, String imgPath){
+        Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3,imgPath);
         String key= storeName+'('+college.substring(0, 2)+')';
         mDatabase.child("Stores").child(key).setValue(store)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
