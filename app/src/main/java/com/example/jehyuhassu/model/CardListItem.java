@@ -1,19 +1,19 @@
 package com.example.jehyuhassu.model;
 
 public class CardListItem {
-    private int image;
+    private String image;
     private String name;
     private String time;
-    private String[] tags;
+    private String tag;
 
-    public CardListItem(int image, String name, String time, String[] tags) {
+    public CardListItem(String image, String name, String time, String tag) {
         this.image = image;
         this.name = name;
         this.time = time;
-        this.tags = tags;
+        this.tag = tag;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -25,7 +25,7 @@ public class CardListItem {
         return time;
     }
 
-    public String[] getTags() {
-        return tags;
+    public String getTag() {
+        return tag;
     }
 }
