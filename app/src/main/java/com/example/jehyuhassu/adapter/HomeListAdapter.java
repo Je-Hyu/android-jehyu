@@ -70,7 +70,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeCa
             // Get a default Storage bucket
             FirebaseStorage storage = FirebaseStorage.getInstance();
             // Create a reference to a file from a Google Cloud Storage URI
-            StorageReference gsReference = storage.getReferenceFromUrl(store.getImage());
+            StorageReference gsReference = storage.getReferenceFromUrl(store.getImgPath());
 
             Glide.with(binding.getRoot().getContext())
                     .load(gsReference)
