@@ -32,6 +32,7 @@ import java.util.Map;
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private ArrayAdapter<String> adapter;
+    private ArrayList<Store> items = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +58,11 @@ public class HomeFragment extends Fragment {
         });
 
         // 초기 데이터 설정
-        binding.collegeAutoCompleteTextView.setText("공과대학", false);
-        findStoreInfoUsingCollege("공과대학");
+        binding.collegeAutoCompleteTextView.setText("IT대학", false);
+        findStoreInfoUsingCollege("IT대학");
+
+        binding.homeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.homeRecyclerView.setAdapter(new HomeListAdapter(items));
 
         return view;
     }
@@ -70,7 +74,8 @@ public class HomeFragment extends Fragment {
                 .orderByChild("college")
                 .equalTo(college);
         Map<String, Object> storeMap = new HashMap<>();
-        ArrayList<Store> items = new ArrayList<>();
+        items.clear();
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,8 +104,7 @@ public class HomeFragment extends Fragment {
                     storeMap.put(storeName, store);
                 }
 
-                binding.homeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                binding.homeRecyclerView.setAdapter(new HomeListAdapter(items));
+                binding.homeRecyclerView.getAdapter().notifyDataSetChanged();
 
                 // 앞서 생성한 storeMap을 사용하여 StoreData를 출력하는 코드
                 for (Map.Entry<String, Object> entry : storeMap.entrySet()) {

@@ -58,6 +58,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("ProfileFragment", "logoutButton clicked");
+                LogoutDialogFragment logoutDialogFragment = new LogoutDialogFragment();
+                logoutDialogFragment.show(getActivity().getSupportFragmentManager(), "logoutDialog");
             }
         });
 
