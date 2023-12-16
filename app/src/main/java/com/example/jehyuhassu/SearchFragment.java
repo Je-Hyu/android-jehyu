@@ -1,5 +1,6 @@
 package com.example.jehyuhassu;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.jehyuhassu.databinding.FragmentSearchBinding;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +104,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     AutoCompleteTextView autoCompleteTextViewCollege = view.findViewById(R.id.autoCompleteTextView_college);
                     AutoCompleteTextView autoCompleteTextViewPeopleNum = view.findViewById(R.id.autoCompleteTextView_people_num);
 
-
                     String college = autoCompleteTextViewCollege.getText().toString();
                     String peopleNum = autoCompleteTextViewPeopleNum.getText().toString();
 
@@ -115,6 +116,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 for (String key : map.keySet()) {
                     Log.d("SearchFragment", "key: " + key + ", value: " + map.get(key));
                 }
+
+                startActivity(new Intent(getActivity(), SearchResultActivity.class)
+                        .putExtra("searchConditions", (Serializable) map));
             }
         });
 
