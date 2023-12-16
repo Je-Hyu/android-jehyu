@@ -51,6 +51,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("ProfileFragment", "contactButton clicked");
+                ContactDialogFragment contactDialogFragment = new ContactDialogFragment();
+                contactDialogFragment.show(getActivity().getSupportFragmentManager(), "contactDialog");
             }
         });
 

@@ -49,7 +49,7 @@
             style="@style/Button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="제휴혜택 문의"
+            android:text="제휴사업 문의"
             android:textColor="@color/white"
             app:cornerRadius="8dp" />
 
