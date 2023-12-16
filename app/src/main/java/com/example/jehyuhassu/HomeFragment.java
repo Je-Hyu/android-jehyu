@@ -88,7 +88,10 @@ public class HomeFragment extends Fragment {
                     String menu1 = storeSnapshot.child("menu1").getValue(String.class);
                     String menu2 = storeSnapshot.child("menu2").getValue(String.class);
                     String menu3 = storeSnapshot.child("menu3").getValue(String.class);
-                    String image = storeSnapshot.child("image").getValue(String.class);
+                    String image = storeSnapshot.child("imgPath").getValue(String.class);
+                    if (image == null) {
+                        image = storeSnapshot.child("image").getValue(String.class);
+                    }
 
                     Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3, image);
                     items.add(store);
