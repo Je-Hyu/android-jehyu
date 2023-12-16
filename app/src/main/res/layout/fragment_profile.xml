@@ -13,11 +13,11 @@
         android:padding="16dp">
 
         <TextView
-            style="@style/Title2"
+            style="@style/SubTitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="정보 수정" />
+            android:text="프로필" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="100dp"

@@ -12,13 +12,13 @@
         android:padding="16dp">
 
         <TextView
-            style="@style/Title2"
+            style="@style/SubTitle1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="제휴업체 검색" />
+            android:text="검색" />
 
         <LinearLayout
             android:id="@+id/layout_list_search"
