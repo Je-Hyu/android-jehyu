@@ -115,6 +115,19 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
                             Log.d("minb", "데이터 저장 성공!");
 
+                            // SharedPreferences에 학번 저장
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("studentNum", String.valueOf(studentId));
+                            editor.putString("depart", college);
+                            editor.putString("major", department);
+                            editor.putString("name", name);
+                            editor.apply();
+
+                            // 로그인 성공시 메인으로 이동
+                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
                         } else {
                             // 데이터 저장 실패
                             Toast.makeText(LoginActivity.this, "회원가입 실패. 다시 시도하세요.", Toast.LENGTH_SHORT).show();
