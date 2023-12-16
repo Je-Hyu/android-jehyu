@@ -40,7 +40,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             }
         });
 
-        holder.bind(item, position);
+        holder.bind(item);
     }
 
     @Override
@@ -56,14 +56,9 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             this.binding = binding;
         }
 
-        private void bind(ProfileListItem item, int position) {
+        private void bind(ProfileListItem item) {
             binding.titleTextView.setText(item.getTitle());
             binding.contentTextView.setText(item.getContent());
-
-            // Show an arrow if the item is a department or parent department
-            if (position == 2 || position == 3) {
-                binding.arrowImageView.setVisibility(View.VISIBLE);
-            }
         }
     }
 

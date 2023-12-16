@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.apply();
 
                             // 로그인 성공시 메인으로 이동
-                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
 
