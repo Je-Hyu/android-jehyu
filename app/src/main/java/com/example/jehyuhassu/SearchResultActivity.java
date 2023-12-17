@@ -23,6 +23,7 @@ import java.util.Map;
 
 public class SearchResultActivity extends AppCompatActivity {
     ActivitySearchResultBinding binding;
+    private ArrayList<Store> items = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +33,22 @@ public class SearchResultActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Map<String, Integer> searchConditions = (Map<String, Integer>) intent.getSerializableExtra("searchConditions");
+        Log.d("SearchResultActivity", "" + searchConditions);
 
-        findStoreInfoUsingCollege("공과대학");
+        for (Map.Entry<String, Integer> entry : searchConditions.entrySet()) {
+            String college = entry.getKey();
+            Integer peopleNum = (Integer) entry.getValue();
+            findStoreInfoUsingCollege(college, peopleNum);
+        }
     }
 
-    private void findStoreInfoUsingCollege(String college) {
+    private void findStoreInfoUsingCollege(String college, Integer peopleNum) {
         // college 필드를 기반으로 데이터 조회
         Query query = FirebaseDatabase.getInstance().getReference()
                 .child("Stores")
                 .orderByChild("college")
                 .equalTo(college);
         Map<String, Object> storeMap = new HashMap<>();
-        ArrayList<Store> items = new ArrayList<>();
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -61,12 +66,16 @@ public class SearchResultActivity extends AppCompatActivity {
                     String menu1 = storeSnapshot.child("menu1").getValue(String.class);
                     String menu2 = storeSnapshot.child("menu2").getValue(String.class);
                     String menu3 = storeSnapshot.child("menu3").getValue(String.class);
-                    String image = storeSnapshot.child("image").getValue(String.class);
+                    String image = storeSnapshot.child("imgPath").getValue(String.class);
+                    if (image == null) {
+                        image = storeSnapshot.child("image").getValue(String.class);
+                    }
 
                     Store store = new Store(participants, storeName, location, startTime, endTime, college, startDate, endDate, contents, menu1, menu2, menu3, image);
-                    items.add(store);
-                    // 조회된 데이터를 Map에 저장
-                    storeMap.put(storeName, store);
+                    if (participants == 1 || participants <= peopleNum) {
+                        items.add(store);
+                        storeMap.put(storeName, store);
+                    }
                 }
 
                 binding.searchRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
